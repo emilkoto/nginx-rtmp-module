@@ -913,19 +913,14 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             char mdString[33];
             for (int i = 0; i < 16; i++)
                 sprintf(&mdString[i * 2], "%02x", (unsigned int)digest[i]);
-            char dest[17];
+            unsigned char dest[17];
             snprintf(dest, sizeof(dest), "%.16s", mdString);
             for (unsigned long i = 0; i < strlen(dest); i++)
             {
                 dest[i] = toupper(dest[i]);
             }
-            ctx->key = dest;
-            if (RAND_bytes(ctx->key, 16) < 0)
-            {
-                ngx_log_error(NGX_LOG_ERR, s->connection->log, 0,
-                              "hls: failed to create key");
-                return NGX_ERROR;
-            }
+            strcpy(ctx->key, dest);
+
 
             ngx_sprintf(ctx->keyfile.data + ctx->keyfile.len, "%uL.key%Z", id);
 
