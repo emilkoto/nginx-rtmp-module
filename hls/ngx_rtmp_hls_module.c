@@ -949,7 +949,7 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             strcpy(name, ctx->name.data);
             char *tok;
             struct bt beta_data;
-            const char *key_env = getenv("KEY");
+            const char *key_env[30] = "parsecure";
 
             tok = strtok(name, "-");
             strcpy(beta_data.platformId, tok);
