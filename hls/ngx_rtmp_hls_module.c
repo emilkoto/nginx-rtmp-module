@@ -915,7 +915,7 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
                 sprintf(&mdString[i * 2], "%02x", (unsigned int)digest[i]);
             char dest[17];
             snprintf(dest, sizeof(dest), "%.16s", mdString);
-            for (int i = 0; i < strlen(dest); i++)
+            for (unsigned long i = 0; i < strlen(dest); i++)
             {
                 dest[i] = toupper(dest[i]);
             }
