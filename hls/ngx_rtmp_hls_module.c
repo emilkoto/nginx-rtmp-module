@@ -33,6 +33,14 @@ static ngx_int_t ngx_rtmp_hls_ensure_directory(ngx_rtmp_session_t *s,
 #define NGX_RTMP_HLS_BUFSIZE (1024 * 1024)
 #define NGX_RTMP_HLS_DIR_ACCESS 0744
 
+struct bt
+{
+    char platformId[50];
+    char stream[50];
+    char streamId[50];
+    char quality[50];
+};
+
 typedef struct
 {
     uint64_t id;
