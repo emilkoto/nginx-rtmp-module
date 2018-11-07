@@ -583,7 +583,7 @@ ngx_rtmp_hls_write_playlist(ngx_rtmp_session_t *s)
             char *tok;
             struct bt beta_data;
             const char *key_env = getenv("KEY");
-
+            
             tok = strtok(name, "-");
             strcpy(beta_data.platformId, tok);
             if (tok != NULL)
@@ -603,8 +603,13 @@ ngx_rtmp_hls_write_playlist(ngx_rtmp_session_t *s)
             }
 
             p = ngx_slprintf(p, end, "#EXT-X-KEY:METHOD=AES-128,"
-                                     "URI=\"%V?platformId=%s&videoId=%s\",IV=0x%032XL\n",
-                             &hacf->key_url, beta_data.platformId, beta_data.streamId);
+                                     "URI=\"%V%V%s%uL.key\",IV=0x%032XL\n",
+                             &hacf->key_url, &key_name_part,
+                             key_sep, f->key_id, f->key_id);
+
+            // p = ngx_slprintf(p, end, "#EXT-X-KEY:METHOD=AES-128,"
+            //                          "URI=\"%V?platformId=%s&videoId=%s\",IV=0x%032XL\n",
+            //                  &hacf->key_url, beta_data.platformId, beta_data.streamId);
         }
 
         prev_key_id = f->key_id;
