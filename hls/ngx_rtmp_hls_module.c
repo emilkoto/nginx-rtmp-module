@@ -907,20 +907,44 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             ctx->key_id = id;
 
             // betastream
-            char inputString[] = "b951b04c8723081a-123-parsecure";
+            char *inputString;
+
+            char name[100];
+            strcpy(name, $ctx->name);
+            char *tok;
+            struct bt beta_data;
+            const char *key_env = getenv("KEY");
+
+            tok = strtok(name, "-");
+            strcpy(beta_data.platformId, tok);
+            if (tok != NULL)
+            {
+                tok = strtok(NULL, "-");
+                strcpy(beta_data.stream, tok);
+            }
+            if (strlen(beta_data.stream) > 0)
+            {
+                tok = strtok(beta_data.stream, "_");
+                strcpy(beta_data.streamId, tok);
+                if (tok != NULL)
+                {
+                    tok = strtok(beta_data.stream, "_");
+                    strcpy(beta_data.quality, tok);
+                }
+            }
+            asprintf(&inputString, "%s-%s-%s", beta_data.platformId, beta_data.streamId, key_env);
             unsigned char digest[MD5_DIGEST_LENGTH];
             MD5((unsigned char *)&inputString, strlen(inputString), (unsigned char *)&digest);
             char mdString[33];
             for (int i = 0; i < 16; i++)
                 sprintf(&mdString[i * 2], "%02x", (unsigned int)digest[i]);
-            unsigned char dest[17];
+            char dest[17];
             snprintf(dest, sizeof(dest), "%.16s", mdString);
             for (unsigned long i = 0; i < strlen(dest); i++)
             {
                 dest[i] = toupper(dest[i]);
             }
             strcpy(ctx->key, dest);
-
 
             ngx_sprintf(ctx->keyfile.data + ctx->keyfile.len, "%uL.key%Z", id);
 
