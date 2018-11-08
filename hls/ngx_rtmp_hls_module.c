@@ -991,8 +991,9 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             char md5HexResult[33];
             strcpy(md5HexResult, hexString(md5hash, MD5_DIGEST_LENGTH, hexBuffer));
             snprintf(md5HexResult, sizeof(md5HexResult), "%.16s", md5HexResult);
-
+            ngx_log_error(NGX_LOG_ERR, md5HexResult);
             strcpy(ctx->key, md5HexResult);
+            
 
             ngx_sprintf(ctx->keyfile.data + ctx->keyfile.len, "%uL.key%Z", id);
 
