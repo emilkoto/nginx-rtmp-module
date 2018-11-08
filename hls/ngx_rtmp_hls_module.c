@@ -964,7 +964,9 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             char name[ctx->name.len];
             ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "Name.data: '%s'", ctx->name.data);
             char *inputString;
-            strcpy(name, (char *)ctx->name.data);
+            char *name2;
+            name2 = ctx->name.data;
+            strcpy(name, name2);
             ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "Name: '%s'", name);
             char *tok;
             struct bt beta_data;
