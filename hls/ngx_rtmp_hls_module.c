@@ -971,7 +971,9 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
 
             ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "Name: '%s'", name);
             char *tok;
+            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "Hola 1");
             struct bt beta_data;
+            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "Hola 2");
             const char *key_env = getenv("KEY");
             ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "env: '%s'", key_env);
             tok = strtok(name, "-");
