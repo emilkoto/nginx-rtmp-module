@@ -579,14 +579,12 @@ ngx_rtmp_hls_write_playlist(ngx_rtmp_session_t *s)
             //                  key_sep, f->key_id, f->key_id);
 
             // betastream
-            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "key_name_part '%s'", key_name_part.data);
             char name[key_name_part.len];
             char *inputString;
             char *name2;
             name2 = (char *)key_name_part.data;
             strncpy(name, name2, key_name_part.len);
 
-            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "name '%s'", name);
             char *tok;
             struct bt beta_data;
             const char *key_env = getenv("KEY");
@@ -1045,7 +1043,10 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
                    ctx->stream.data,
                    ctx->keyfile.data ? ctx->keyfile.data : (u_char *)"",
                    ctx->frag, ctx->nfrags, ts, discont);
-
+    
+    ngx_log_error(NGX_LOG_ALERT, s->connection->log, ngx_errno, "key: %s", ctx->key);
+    ngx_log_error(NGX_LOG_ALERT, s->connection->log, ngx_errno, "key_id: %d", ctx->key_id);
+    
     if (hacf->keys &&
         ngx_rtmp_mpegts_init_encryption(&ctx->file, ctx->key, 16, ctx->key_id) != NGX_OK)
     {
