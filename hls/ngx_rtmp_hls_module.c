@@ -966,8 +966,7 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             char *inputString;
             char *name2;
             name2 = (char *)ctx->name.data;
-            char name[100];
-            strncpy(name, name2, 100);
+            strncpy(name, name2, ctx->name.len);
 
 
             ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "Name: '%s'", name);
