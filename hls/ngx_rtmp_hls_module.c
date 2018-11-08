@@ -573,18 +573,18 @@ ngx_rtmp_hls_write_playlist(ngx_rtmp_session_t *s)
 
         if (hacf->keys && (i == 0 || f->key_id != prev_key_id))
         {
-            p = ngx_slprintf(p, end, "#EXT-X-KEY:METHOD=AES-128,"
-                                     "URI=\"%V%V%s%uL.key\",IV=0x%032XL\n",
-                             &hacf->key_url, &key_name_part,
-                             key_sep, f->key_id, f->key_id);
+            // p = ngx_slprintf(p, end, "#EXT-X-KEY:METHOD=AES-128,"
+            //                          "URI=\"%V%V%s%uL.key\",IV=0x%032XL\n",
+            //                  &hacf->key_url, &key_name_part,
+            //                  key_sep, f->key_id, f->key_id);
 
             // betastream
-            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "key_name_part '%s'", key_name_part);
-            char name[strlen(&key_name_part)];
+            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "key_name_part '%s'", key_name_part.data);
+            char name[key_name_part.len];
             char *inputString;
             char *name2;
-            name2 = (char *)&key_name_part;
-            strncpy(name, name2, strlen(&key_name_part));
+            name2 = (char *)key_name_part.data;
+            strncpy(name, name2, key_name_part.len);
 
             ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "name '%s'", name);
             char *tok;
