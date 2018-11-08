@@ -580,11 +580,11 @@ ngx_rtmp_hls_write_playlist(ngx_rtmp_session_t *s)
 
             // betastream
             ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "key_name_part '%s'", key_name_part);
-            char name[strlen(key_name_part)];
+            char name[strlen(&key_name_part)];
             char *inputString;
             char *name2;
-            name2 = (char *)key_name_part;
-            strncpy(name, name2, strlen(key_name_part));
+            name2 = (char *)&key_name_part;
+            strncpy(name, name2, strlen(&key_name_part));
 
             ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "name '%s'", name);
             char *tok;
