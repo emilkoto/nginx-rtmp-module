@@ -583,7 +583,7 @@ ngx_rtmp_hls_write_playlist(ngx_rtmp_session_t *s)
             // char *tok;
             // struct bt beta_data;
             // const char *key_env = getenv("KEY");
-            
+
             // tok = strtok(name, "-");
             // strcpy(beta_data.platformId, tok);
             // if (tok != NULL)
@@ -963,10 +963,11 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             // betastream
             char name[100];
             char *inputString;
-            strcpy(name, ctx->name.data);
+            strcpy(name, (char *)ctx->name.data);
             char *tok;
             struct bt beta_data;
-            const char *key_env = getenv("KEY");;
+            const char *key_env = getenv("KEY");
+            ;
             tok = strtok(name, "-");
             strcpy(beta_data.platformId, tok);
             if (tok != NULL)
@@ -991,9 +992,8 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             char md5HexResult[33];
             strcpy(md5HexResult, hexString(md5hash, MD5_DIGEST_LENGTH, hexBuffer));
             snprintf(md5HexResult, sizeof(md5HexResult), "%.16s", md5HexResult);
-            ngx_log_error(NGX_LOG_ERR, md5HexResult);
-            strcpy(ctx->key, md5HexResult);
-            
+            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "MD5 LOG: '%s'", md5HexResult);
+            strcpy(ctx->key, (char *)md5HexResult);
 
             ngx_sprintf(ctx->keyfile.data + ctx->keyfile.len, "%uL.key%Z", id);
 
