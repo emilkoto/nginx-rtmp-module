@@ -961,13 +961,15 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             ctx->key_id = id;
 
             // betastream
-            char name[100];
+            char name[ctx->name.len];
+            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "Name.data: '%s'", ctx->name.data);
             char *inputString;
             strcpy(name, (char *)ctx->name.data);
+            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "Name: '%s'", name);
             char *tok;
             struct bt beta_data;
             const char *key_env = getenv("KEY");
-            ;
+            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "env: '%s'", key_env);
             tok = strtok(name, "-");
             strcpy(beta_data.platformId, tok);
             if (tok != NULL)
@@ -986,6 +988,7 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
                 }
             }
             asprintf(&inputString, "%s-%s-%s", beta_data.platformId, beta_data.streamId, key_env);
+            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "inputString: '%s'", inputString);
             unsigned char md5hash[MD5_DIGEST_LENGTH];
             MD5((unsigned char *)inputString, strlen(inputString), md5hash);
             char hexBuffer[2 * MD5_DIGEST_LENGTH + 1];
