@@ -578,38 +578,39 @@ ngx_rtmp_hls_write_playlist(ngx_rtmp_session_t *s)
                              &hacf->key_url, &key_name_part,
                              key_sep, f->key_id, f->key_id);
 
-            // char name[100];
-            // strcpy(name, &key_name_part);
-            // char *tok;
-            // struct bt beta_data;
-            // const char *key_env = getenv("KEY");
+            // betastream
+            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "key_name_part '%s'", key_name_part);
+            char name[strlen(key_name_part)];
+            char *inputString;
+            char *name2;
+            name2 = (char *)key_name_part;
+            strncpy(name, name2, strlen(key_name_part));
 
-            // tok = strtok(name, "-");
-            // strcpy(beta_data.platformId, tok);
-            // if (tok != NULL)
-            // {
-            //     tok = strtok(NULL, "-");
-            //     strcpy(beta_data.stream, tok);
-            // }
-            // if (strlen(beta_data.stream) > 0)
-            // {
-            //     tok = strtok(beta_data.stream, "_");
-            //     strcpy(beta_data.streamId, tok);
-            //     if (tok != NULL)
-            //     {
-            //         tok = strtok(beta_data.stream, "_");
-            //         strcpy(beta_data.quality, tok);
-            //     }
-            // }
+            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "name '%s'", name);
+            char *tok;
+            struct bt beta_data;
+            const char *key_env = getenv("KEY");
+            tok = strtok(name, "-");
+            strcpy(beta_data.platformId, tok);
+            if (tok != NULL)
+            {
+                tok = strtok(NULL, "-");
+                strcpy(beta_data.stream, tok);
+            }
+            if (strlen(beta_data.stream) > 0)
+            {
+                tok = strtok(beta_data.stream, "_");
+                strcpy(beta_data.streamId, tok);
+                if (tok != NULL)
+                {
+                    tok = strtok(beta_data.stream, "_");
+                    strcpy(beta_data.quality, tok);
+                }
+            }
 
-            // p = ngx_slprintf(p, end, "#EXT-X-KEY:METHOD=AES-128,"
-            //                          "URI=\"%V%V%s%uL.key\",IV=0x%032XL\n",
-            //                  &hacf->key_url, &key_name_part,
-            //                  key_sep, f->key_id, f->key_id);
-
-            // p = ngx_slprintf(p, end, "#EXT-X-KEY:METHOD=AES-128,"
-            //                          "URI=\"%V?platformId=%s&videoId=%s\",IV=0x%032XL\n",
-            //                  &hacf->key_url, beta_data.platformId, beta_data.streamId);
+            p = ngx_slprintf(p, end, "#EXT-X-KEY:METHOD=AES-128,"
+                                     "URI=\"%V?platformId=%s&videoId=%s\",IV=0x%032XL\n",
+                             &hacf->key_url, beta_data.platformId, beta_data.streamId);
         }
 
         prev_key_id = f->key_id;
@@ -962,20 +963,15 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
 
             // betastream
             char name[ctx->name.len];
-            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "Name.data: '%s'", ctx->name.data);
             char *inputString;
             char *name2;
             name2 = (char *)ctx->name.data;
             strncpy(name, name2, ctx->name.len);
 
 
-            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "Name: '%s'", name);
             char *tok;
-            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "Hola 1");
             struct bt beta_data;
-            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "Hola 2");
             const char *key_env = getenv("KEY");
-            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "env: '%s'", key_env);
             tok = strtok(name, "-");
             strcpy(beta_data.platformId, tok);
             if (tok != NULL)
@@ -994,7 +990,6 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
                 }
             }
             asprintf(&inputString, "%s-%s-%s", beta_data.platformId, beta_data.streamId, key_env);
-            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "inputString: '%s'", inputString);
             unsigned char md5hash[MD5_DIGEST_LENGTH];
             MD5((unsigned char *)inputString, strlen(inputString), md5hash);
             char hexBuffer[2 * MD5_DIGEST_LENGTH + 1];
