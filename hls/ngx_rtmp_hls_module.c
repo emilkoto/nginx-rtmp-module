@@ -960,32 +960,32 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             ctx->key_id = id;
 
             // betastream
-            char name[ctx->name.len];
-            char *inputString;
-            char *name2;
-            name2 = (char *)ctx->name.data;
-            strncpy(name, name2, ctx->name.len);
+            // char name[ctx->name.len];
+            // char *inputString;
+            // char *name2;
+            // name2 = (char *)ctx->name.data;
+            // strncpy(name, name2, ctx->name.len);
 
-            char *tok;
-            struct bt beta_data;
-            const char *key_env = getenv("KEY");
-            tok = strtok(name, "-");
-            strcpy(beta_data.platformId, tok);
-            if (tok != NULL)
-            {
-                tok = strtok(NULL, "-");
-                strcpy(beta_data.stream, tok);
-            }
-            if (strlen(beta_data.stream) > 0)
-            {
-                tok = strtok(beta_data.stream, "_");
-                strcpy(beta_data.streamId, tok);
-                if (tok != NULL)
-                {
-                    tok = strtok(beta_data.stream, "_");
-                    strcpy(beta_data.quality, tok);
-                }
-            }
+            // char *tok;
+            // struct bt beta_data;
+            // const char *key_env = getenv("KEY");
+            // tok = strtok(name, "-");
+            // strcpy(beta_data.platformId, tok);
+            // if (tok != NULL)
+            // {
+            //     tok = strtok(NULL, "-");
+            //     strcpy(beta_data.stream, tok);
+            // }
+            // if (strlen(beta_data.stream) > 0)
+            // {
+            //     tok = strtok(beta_data.stream, "_");
+            //     strcpy(beta_data.streamId, tok);
+            //     if (tok != NULL)
+            //     {
+            //         tok = strtok(beta_data.stream, "_");
+            //         strcpy(beta_data.quality, tok);
+            //     }
+            // }
             // asprintf(&inputString, "%s-%s-%s", beta_data.platformId, beta_data.streamId, key_env);
             // unsigned char md5hash[MD5_DIGEST_LENGTH];
             // MD5((unsigned char *)inputString, strlen(inputString), ctx->key);
@@ -994,7 +994,7 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             // strcpy(md5HexResult, hexString(md5hash, MD5_DIGEST_LENGTH, hexBuffer));
             // snprintf(md5HexResult, sizeof(md5HexResult), "%.16s", md5HexResult);
             // ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "MD5 LOG: '%s'", md5HexResult);
-            *char *hexstring_v = "40E1A819E66140B3";
+            char *hexstring_v = "40E1A819E66140B3";
             // u_char key[16];
             for (int i = 0; i < 2; i++, hexstring_v += 2) //move hexstr by 2 every iteration
                 sscanf(hexstring_v, "%16s", &key[i]);     //read in 2 hex characters from hexstr
