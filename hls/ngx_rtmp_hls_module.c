@@ -966,7 +966,6 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             name2 = (char *)ctx->name.data;
             strncpy(name, name2, ctx->name.len);
 
-
             char *tok;
             struct bt beta_data;
             const char *key_env = getenv("KEY");
@@ -987,19 +986,20 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
                     strcpy(beta_data.quality, tok);
                 }
             }
-            asprintf(&inputString, "%s-%s-%s", beta_data.platformId, beta_data.streamId, key_env);
-            unsigned char md5hash[MD5_DIGEST_LENGTH];
-            MD5((unsigned char *)inputString, strlen(inputString), ctx->key);
+            // asprintf(&inputString, "%s-%s-%s", beta_data.platformId, beta_data.streamId, key_env);
+            // unsigned char md5hash[MD5_DIGEST_LENGTH];
+            // MD5((unsigned char *)inputString, strlen(inputString), ctx->key);
             // char hexBuffer[2 * MD5_DIGEST_LENGTH + 1];
             // char md5HexResult[33];
             // strcpy(md5HexResult, hexString(md5hash, MD5_DIGEST_LENGTH, hexBuffer));
             // snprintf(md5HexResult, sizeof(md5HexResult), "%.16s", md5HexResult);
             // ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "MD5 LOG: '%s'", md5HexResult);
+            *char *hexstring_v = "40E1A819E66140B3";
+            // u_char key[16];
+            for (int i = 0; i < 2; i++, hexstring_v += 2) //move hexstr by 2 every iteration
+                sscanf(hexstring_v, "%16s", &key[i]);     //read in 2 hex characters from hexstr
 
-
-            
-
-
+            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "key u_char: '%s'", ctx->key.data);
             // strncpy((char *)ctx->key, (char *)md5HexResult, 16);
 
             ngx_sprintf(ctx->keyfile.data + ctx->keyfile.len, "%uL.key%Z", id);
@@ -1048,10 +1048,10 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
                    ctx->stream.data,
                    ctx->keyfile.data ? ctx->keyfile.data : (u_char *)"",
                    ctx->frag, ctx->nfrags, ts, discont);
-    
+
     ngx_log_error(NGX_LOG_ALERT, s->connection->log, ngx_errno, "key: %s", ctx->key);
     ngx_log_error(NGX_LOG_ALERT, s->connection->log, ngx_errno, "key_id: %d", ctx->key_id);
-    
+
     if (hacf->keys &&
         ngx_rtmp_mpegts_init_encryption(&ctx->file, ctx->key, 16, ctx->key_id) != NGX_OK)
     {
