@@ -490,7 +490,7 @@ ngx_rtmp_hls_write_playlist(ngx_rtmp_session_t *s)
     ngx_uint_t i, max_frag;
     ngx_str_t name_part, key_name_part;
     uint64_t prev_key_id;
-    const char *sep, *key_sep;
+    const char *sep;
 
     hacf = ngx_rtmp_get_module_app_conf(s, ngx_rtmp_hls_module);
     ctx = ngx_rtmp_get_module_ctx(s, ngx_rtmp_hls_module);
@@ -543,7 +543,7 @@ ngx_rtmp_hls_write_playlist(ngx_rtmp_session_t *s)
     }
 
     sep = hacf->nested ? (hacf->base_url.len ? "/" : "") : "-";
-    key_sep = hacf->nested ? (hacf->key_url.len ? "/" : "") : "-";
+    // key_sep = hacf->nested ? (hacf->key_url.len ? "/" : "") : "-";
 
     name_part.len = 0;
     if (!hacf->nested || hacf->base_url.len)
@@ -997,7 +997,7 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             for (int i = 0; i < 2; i++, hexstring_v += 2) //move hexstr by 2 every iteration
                 sscanf(hexstring_v, "%16s", &ctx->key[i]);     //read in 2 hex characters from hexstr
 
-            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "key u_char: '%s'", ctx->key.data);
+            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "key u_char: '%s'", ctx->key);
             // strncpy((char *)ctx->key, (char *)md5HexResult, 16);
 
             ngx_sprintf(ctx->keyfile.data + ctx->keyfile.len, "%uL.key%Z", id);
