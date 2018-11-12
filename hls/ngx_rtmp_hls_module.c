@@ -580,14 +580,12 @@ ngx_rtmp_hls_write_playlist(ngx_rtmp_session_t *s)
 
             // betastream
             char name[key_name_part.len];
-            char *inputString;
             char *name2;
             name2 = (char *)key_name_part.data;
             strncpy(name, name2, key_name_part.len);
 
             char *tok;
             struct bt beta_data;
-            const char *key_env = getenv("KEY");
             tok = strtok(name, "-");
             strcpy(beta_data.platformId, tok);
             if (tok != NULL)
@@ -997,7 +995,7 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             char *hexstring_v = "40E1A819E66140B3";
             // u_char key[16];
             for (int i = 0; i < 2; i++, hexstring_v += 2) //move hexstr by 2 every iteration
-                sscanf(hexstring_v, "%16s", &key[i]);     //read in 2 hex characters from hexstr
+                sscanf(hexstring_v, "%16s", &ctx->key[i]);     //read in 2 hex characters from hexstr
 
             ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "key u_char: '%s'", ctx->key.data);
             // strncpy((char *)ctx->key, (char *)md5HexResult, 16);
