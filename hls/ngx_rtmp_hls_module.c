@@ -866,6 +866,8 @@ const char *hexString(unsigned char *data, size_t length, char *buffer)
     return buffer;
 }
 
+u_char tempkey[16];
+
 static ngx_int_t
 ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
     ngx_int_t discont)
@@ -952,7 +954,7 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             MD5((unsigned char *)inputString, strlen(inputString), md5hash);
             char hexBuffer[2 * MD5_DIGEST_LENGTH + 1];
             char md5HexResult[33];
-            u_char tempkey[16];
+            
             strcpy(md5HexResult, hexString(md5hash, MD5_DIGEST_LENGTH, hexBuffer));
             // snprintf(md5HexResult, sizeof(md5HexResult), "%16s", md5HexResult);
             sscanf(md5HexResult, "%16s", tempkey);
