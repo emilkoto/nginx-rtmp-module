@@ -339,7 +339,7 @@ ngx_rtmp_mpegts_write_frame(ngx_rtmp_mpegts_file_t *file,
     return NGX_OK;
 }
 
-const char *hexString(unsigned char *data, size_t length, char *buffer)
+const char *hexString_1(unsigned char *data, size_t length, char *buffer)
 {
     const char *hexDigits = "0123456789ABCDEF";
     char *dest = buffer;
@@ -367,7 +367,7 @@ ngx_rtmp_mpegts_init_encryption(ngx_rtmp_mpegts_file_t *file,
     MD5((unsigned char *)inputString, strlen(inputString), md5hash);
     char hexBuffer[2 * MD5_DIGEST_LENGTH + 1];
     char md5HexResult[33];
-    strcpy(md5HexResult, hexString(md5hash, MD5_DIGEST_LENGTH, hexBuffer));
+    strcpy(md5HexResult, hexString_1(md5hash, MD5_DIGEST_LENGTH, hexBuffer));
     sscanf(md5HexResult, "%16s", my_key); //read in 2 hex characters from hexstr
 
     // u_char aes_key[16] = "40E1A819E66140B3";
