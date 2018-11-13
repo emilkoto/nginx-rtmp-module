@@ -11,6 +11,12 @@
 #include <ngx_rtmp_codec_module.h>
 #include "ngx_rtmp_mpegts.h"
 
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <openssl/md5.h>
+
 
 static ngx_rtmp_publish_pt              next_publish;
 static ngx_rtmp_close_stream_pt         next_close_stream;
@@ -884,13 +890,53 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             ctx->key_frags = hacf->frags_per_key - 1;
             ctx->key_id = id;
 
+            // ********* esto funciona correctamente *******/
             // if (RAND_bytes(ctx->key, 16) < 0) {
             //     ngx_log_error(NGX_LOG_ERR, s->connection->log, 0,
             //                   "hls: failed to create key");
             //     return NGX_ERROR;
             // }
-            char *hex = "40E1A819E66140B3";
-            sscanf(hex, "%16s", &ctx->key); //read in 2 hex characters from hexstr
+            // char *hex = "40E1A819E66140B3";
+            // sscanf(hex, "%16s", &ctx->key); //read in 2 hex characters from hexstr
+
+
+            // betastream
+            char name[ctx->name.len];
+            char *inputString;
+            char *name2;
+            name2 = (char *)ctx->name.data;
+            strncpy(name, name2, ctx->name.len);
+
+            char *tok;
+            struct bt beta_data;
+            const char *key_env = getenv("KEY");
+            tok = strtok(name, "-");
+            strcpy(beta_data.platformId, tok);
+            if (tok != NULL)
+            {
+                tok = strtok(NULL, "-");
+                strcpy(beta_data.stream, tok);
+            }
+            if (strlen(beta_data.stream) > 0)
+            {
+                tok = strtok(beta_data.stream, "_");
+                strcpy(beta_data.streamId, tok);
+                if (tok != NULL)
+                {
+                    tok = strtok(beta_data.stream, "_");
+                    strcpy(beta_data.quality, tok);
+                }
+            }
+            asprintf(&inputString, "%s-%s-%s", beta_data.platformId, beta_data.streamId, key_env);
+            unsigned char md5hash[MD5_DIGEST_LENGTH];
+            MD5((unsigned char *)inputString, strlen(inputString), ctx->key);
+            char hexBuffer[2 * MD5_DIGEST_LENGTH + 1];
+            char md5HexResult[33];
+            strcpy(md5HexResult, hexString(md5hash, MD5_DIGEST_LENGTH, hexBuffer));
+            snprintf(md5HexResult, sizeof(md5HexResult), "%.16s", md5HexResult);
+            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "MD5 LOG: '%s'", md5HexResult);
+            scanf(md5HexResult, "%16s", &ctx->key);
+
 
             ngx_sprintf(ctx->keyfile.data + ctx->keyfile.len, "%uL.key%Z", id);
 
