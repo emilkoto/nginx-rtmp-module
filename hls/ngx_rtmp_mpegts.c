@@ -371,7 +371,7 @@ ngx_rtmp_mpegts_init_encryption(ngx_rtmp_mpegts_file_t *file,
     // sscanf(md5HexResult, "%16s", my_key); //read in 2 hex characters from hexstr
 
     // ngx_log_error(NGX_LOG_ERR, "LOG BETA", 0, "key: %s", my_key);
-    // u_char aes_key[16] = "40E1A819E66140B3";
+    u_char aes_key[16] = "40E1A819E66140B3";
 
     if (AES_set_encrypt_key(aes_key, sizeof(aes_key) * 8, &file->key)) {
         return NGX_ERROR;
