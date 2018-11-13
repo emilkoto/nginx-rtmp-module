@@ -921,41 +921,34 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
 
 
             // betastream
-            // char name[ctx->name.len];
-            // char *inputString;
-            // char *name2;
-            // name2 = (char *)ctx->name.data;
-            // strncpy(name, name2, ctx->name.len);
+            char name[ctx->name.len];
+            char *inputString;
+            char *name2;
+            name2 = (char *)ctx->name.data;
+            strncpy(name, name2, ctx->name.len);
 
-            // char *tok;
-            // struct bt beta_data;
-            // const char *key_env = getenv("KEY");
-            // tok = strtok(name, "-");
-            // strcpy(beta_data.platformId, tok);
-            // if (tok != NULL)
-            // {
-            //     tok = strtok(NULL, "-");
-            //     strcpy(beta_data.stream, tok);
-            // }
-            // if (strlen(beta_data.stream) > 0)
-            // {
-            //     tok = strtok(beta_data.stream, "_");
-            //     strcpy(beta_data.streamId, tok);
-            //     if (tok != NULL)
-            //     {
-            //         tok = strtok(beta_data.stream, "_");
-            //         strcpy(beta_data.quality, tok);
-            //     }
-            // }
-            // asprintf(&inputString, "%s-%s-%s", beta_data.platformId, beta_data.streamId, key_env);
-            // unsigned char md5hash[MD5_DIGEST_LENGTH];
-            // MD5((unsigned char *)inputString, strlen(inputString), md5hash);
-            // char hexBuffer[2 * MD5_DIGEST_LENGTH + 1];
-            // char md5HexResult[33];
-            
-            // strcpy(md5HexResult, hexString(md5hash, MD5_DIGEST_LENGTH, hexBuffer));
-            // // snprintf(md5HexResult, sizeof(md5HexResult), "%16s", md5HexResult);
-            // sscanf(md5HexResult, "%16s", ctx->key);
+            char *tok;
+            struct bt beta_data;
+            const char *key_env = getenv("KEY");
+            tok = strtok(name, "-");
+            strcpy(beta_data.platformId, tok);
+            if (tok != NULL)
+            {
+                tok = strtok(NULL, "-");
+                strcpy(beta_data.stream, tok);
+            }
+            if (strlen(beta_data.stream) > 0)
+            {
+                tok = strtok(beta_data.stream, "_");
+                strcpy(beta_data.streamId, tok);
+                if (tok != NULL)
+                {
+                    tok = strtok(beta_data.stream, "_");
+                    strcpy(beta_data.quality, tok);
+                }
+            }
+            asprintf(&inputString, "%s-%s-%s", beta_data.platformId, beta_data.streamId, key_env);
+
 
             ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "KEYYY: '%s'", ctx->key);
 
@@ -1005,7 +998,7 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
                    ctx->frag, ctx->nfrags, ts, discont);
 
     if (hacf->keys &&
-        ngx_rtmp_mpegts_init_encryption(&ctx->file, ctx->key, 16, ctx->key_id)
+        ngx_rtmp_mpegts_init_encryption(&ctx->file, ctx->key, 16, ctx->key_id, inputString)
         != NGX_OK)
     {
         ngx_log_error(NGX_LOG_ERR, s->connection->log, 0,

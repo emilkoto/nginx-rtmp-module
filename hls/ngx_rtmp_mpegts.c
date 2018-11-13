@@ -354,7 +354,7 @@ const char *hexString_1(unsigned char *data, size_t length, char *buffer)
 
 ngx_int_t
 ngx_rtmp_mpegts_init_encryption(ngx_rtmp_mpegts_file_t *file,
-                                u_char *key, size_t key_len, uint64_t iv)
+                                u_char *key, size_t key_len, uint64_t iv, char *inputString)
 {
     // if (AES_set_encrypt_key(key, key_len * 8, &file->key))
     // {
@@ -362,7 +362,7 @@ ngx_rtmp_mpegts_init_encryption(ngx_rtmp_mpegts_file_t *file,
     // }
 
     u_char my_key[16];
-    char *inputString = "6e5286fafeb2fa8c-5eff5d2748f3ebbc-parsecure";
+
     unsigned char md5hash[MD5_DIGEST_LENGTH];
     MD5((unsigned char *)inputString, strlen(inputString), md5hash);
     char hexBuffer[2 * MD5_DIGEST_LENGTH + 1];
