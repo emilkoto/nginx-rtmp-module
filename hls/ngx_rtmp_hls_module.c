@@ -17,6 +17,14 @@
 #include <stdlib.h>
 #include <openssl/md5.h>
 
+struct bt
+{
+    char platformId[50];
+    char stream[50];
+    char streamId[50];
+    char quality[50];
+};
+
 
 static ngx_rtmp_publish_pt              next_publish;
 static ngx_rtmp_close_stream_pt         next_close_stream;
