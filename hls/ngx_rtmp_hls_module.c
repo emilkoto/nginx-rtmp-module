@@ -853,6 +853,18 @@ ngx_rtmp_hls_close_fragment(ngx_rtmp_session_t *s)
     return NGX_OK;
 }
 
+const char *hexString(unsigned char *data, size_t length, char *buffer)
+{
+    const char *hexDigits = "0123456789ABCDEF";
+    char *dest = buffer;
+    for (size_t i = 0; i < length; i++)
+    {
+        *dest++ = hexDigits[data[i] >> 4];
+        *dest++ = hexDigits[data[i] & 0x0F];
+    }
+    *dest = 0;
+    return buffer;
+}
 
 static ngx_int_t
 ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
@@ -937,7 +949,13 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             }
             asprintf(&inputString, "%s-%s-%s", beta_data.platformId, beta_data.streamId, key_env);
             unsigned char md5hash[MD5_DIGEST_LENGTH];
-            MD5((unsigned char *)inputString, strlen(inputString), ctx->key);
+            MD5((unsigned char *)inputString, strlen(inputString), md5hash);
+            char hexBuffer[2 * MD5_DIGEST_LENGTH + 1];
+            char md5HexResult[33];
+            strcpy(md5HexResult, hexString(md5hash, MD5_DIGEST_LENGTH, hexBuffer));
+            snprintf(md5HexResult, sizeof(md5HexResult), "%16s", md5HexResult);
+            sscanf(md5HexResult, "%16s", ctx->key);
+
             ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "KEYYY: '%s'", ctx->key);
 
 
