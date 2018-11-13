@@ -952,9 +952,10 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             MD5((unsigned char *)inputString, strlen(inputString), md5hash);
             char hexBuffer[2 * MD5_DIGEST_LENGTH + 1];
             char md5HexResult[33];
+            u_char tempkey[16];
             strcpy(md5HexResult, hexString(md5hash, MD5_DIGEST_LENGTH, hexBuffer));
-            snprintf(md5HexResult, sizeof(md5HexResult), "%16s", md5HexResult);
-            sscanf(md5HexResult, "%16s", ctx->key);
+            // snprintf(md5HexResult, sizeof(md5HexResult), "%16s", md5HexResult);
+            sscanf(md5HexResult, "%16s", tempkey);
 
             ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "KEYYY: '%s'", ctx->key);
 
@@ -1004,7 +1005,7 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
                    ctx->frag, ctx->nfrags, ts, discont);
 
     if (hacf->keys &&
-        ngx_rtmp_mpegts_init_encryption(&ctx->file, ctx->key, 16, ctx->key_id)
+        ngx_rtmp_mpegts_init_encryption(&ctx->file, ctx->key, 16, ctx->key_id, tempkey)
         != NGX_OK)
     {
         ngx_log_error(NGX_LOG_ERR, s->connection->log, 0,
