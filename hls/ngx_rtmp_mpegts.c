@@ -361,19 +361,19 @@ ngx_rtmp_mpegts_init_encryption(ngx_rtmp_mpegts_file_t *file,
     //     return NGX_ERROR;
     // }
 
-    u_char my_key[16];
+    // u_char my_key[16];
 
-    unsigned char md5hash[MD5_DIGEST_LENGTH];
-    MD5((unsigned char *)inputString, strlen(inputString), md5hash);
-    char hexBuffer[2 * MD5_DIGEST_LENGTH + 1];
-    char md5HexResult[33];
-    strcpy(md5HexResult, hexString_1(md5hash, MD5_DIGEST_LENGTH, hexBuffer));
-    sscanf(md5HexResult, "%16s", my_key); //read in 2 hex characters from hexstr
+    // unsigned char md5hash[MD5_DIGEST_LENGTH];
+    // MD5((unsigned char *)inputString, strlen(inputString), md5hash);
+    // char hexBuffer[2 * MD5_DIGEST_LENGTH + 1];
+    // char md5HexResult[33];
+    // strcpy(md5HexResult, hexString_1(md5hash, MD5_DIGEST_LENGTH, hexBuffer));
+    // sscanf(md5HexResult, "%16s", my_key); //read in 2 hex characters from hexstr
 
     // ngx_log_error(NGX_LOG_ERR, "LOG BETA", 0, "key: %s", my_key);
     // u_char aes_key[16] = "40E1A819E66140B3";
 
-    if (AES_set_encrypt_key(my_key, sizeof(my_key) * 8, &file->key)) {
+    if (AES_set_encrypt_key(aes_key, sizeof(aes_key) * 8, &file->key)) {
         return NGX_ERROR;
     }
 
