@@ -327,15 +327,15 @@ ngx_int_t
 ngx_rtmp_mpegts_init_encryption(ngx_rtmp_mpegts_file_t *file,
     u_char *key, size_t key_len, uint64_t iv)
 {
-    // if (AES_set_encrypt_key(key, key_len * 8, &file->key)) {
-    //     return NGX_ERROR;
-    // }
-
-     u_char aes_key[16] = "40E1A819E66140B3";
-
-    if (AES_set_encrypt_key(aes_key, sizeof(aes_key) * 8, &file->key)) {
+    if (AES_set_encrypt_key(key, key_len * 8, &file->key)) {
         return NGX_ERROR;
     }
+
+    //  u_char aes_key[16] = "40E1A819E66140B3";
+
+    // if (AES_set_encrypt_key(aes_key, sizeof(aes_key) * 8, &file->key)) {
+    //     return NGX_ERROR;
+    // }
 
     ngx_memzero(file->iv, 8);
 
