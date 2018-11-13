@@ -997,9 +997,14 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             // for (int i = 0; i < 2; i++, hexstring_v += 2)  //move hexstr by 2 every iteration
             //     sscanf(hexstring_v, "%16s", &ctx->key[i]); //read in 2 hex characters from hexstr
 
-            char *hex = "40E1A819E66140B3";
-            sscanf(hex, "%16s", &ctx->key); //read in 2 hex characters from hexstr
-
+            // char *hex = "40E1A819E66140B3";
+            // sscanf(hex, "%16s", &ctx->key); //read in 2 hex characters from hexstr
+            if (RAND_bytes(ctx->key, 16) < 0) {
+                ngx_log_error(NGX_LOG_ERR, s->connection->log, 0,
+                              "hls: failed to create key");
+                return NGX_ERROR;
+            }
+            
             ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "key u_char: '%s'", ctx->key);
             // strncpy((char *)ctx->key, (char *)md5HexResult, 16);
 
