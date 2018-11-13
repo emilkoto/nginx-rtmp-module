@@ -930,12 +930,7 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             asprintf(&inputString, "%s-%s-%s", beta_data.platformId, beta_data.streamId, key_env);
             unsigned char md5hash[MD5_DIGEST_LENGTH];
             MD5((unsigned char *)inputString, strlen(inputString), ctx->key);
-            char hexBuffer[2 * MD5_DIGEST_LENGTH + 1];
-            char md5HexResult[33];
-            strcpy(md5HexResult, hexString(md5hash, MD5_DIGEST_LENGTH, hexBuffer));
-            snprintf(md5HexResult, sizeof(md5HexResult), "%.16s", md5HexResult);
-            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "MD5 LOG: '%s'", md5HexResult);
-            scanf(md5HexResult, "%16s", &ctx->key);
+            ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno, "KEYYY: '%s'", ctx->key);
 
 
             ngx_sprintf(ctx->keyfile.data + ctx->keyfile.len, "%uL.key%Z", id);
