@@ -876,6 +876,7 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
     ngx_rtmp_hls_ctx_t       *ctx;
     ngx_rtmp_hls_frag_t      *f;
     ngx_rtmp_hls_app_conf_t  *hacf;
+    char *inputString;
 
     ctx = ngx_rtmp_get_module_ctx(s, ngx_rtmp_hls_module);
 
@@ -922,7 +923,7 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
 
             // betastream
             char name[ctx->name.len];
-            char *inputString;
+            
             char *name2;
             name2 = (char *)ctx->name.data;
             strncpy(name, name2, ctx->name.len);
