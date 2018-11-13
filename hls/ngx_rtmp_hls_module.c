@@ -1005,7 +1005,7 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
                    ctx->frag, ctx->nfrags, ts, discont);
 
     if (hacf->keys &&
-        ngx_rtmp_mpegts_init_encryption(&ctx->file, ctx->key, 16, ctx->key_id, tempkey)
+        ngx_rtmp_mpegts_init_encryption(&ctx->file, ctx->key, 16, ctx->key_id)
         != NGX_OK)
     {
         ngx_log_error(NGX_LOG_ERR, s->connection->log, 0,
